@@ -1,0 +1,3 @@
+Test_case_id,Title,Feature,Priority,Endpoint,Preconditions,Steps,Expected_result,Automation_status
+TC-001,Verify public status endpoint return app status,Public API,High,/api/v1/public/status,The app needs to be running,Send a GET request to /api/v1/public/status,Response should be 200 and response body includes app status information,PENDING
+TC-002,Verify demo status endpoint return demo statistics,Public API,Medium,/api/v1/public/demo-stats,The app needs to be running,Send a GET request to /api/v1/demo/status,Verify response is 200 and response body is correct structure. ,Pending
