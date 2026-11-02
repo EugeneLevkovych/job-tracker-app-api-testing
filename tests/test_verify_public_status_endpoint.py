@@ -1,4 +1,5 @@
 import requests
+from configs.settings import BASE_URL
 
 def test_verify_public_status_endpoint():
     """
@@ -12,11 +13,12 @@ def test_verify_public_status_endpoint():
     """
 
     # make the call
-    url = 'http://localhost:3050/api/v1/public/status'
+    url = f'{BASE_URL}/api/v1/public/status'
+    print(url)
     response = requests.get(url)
     # verify the status code
-    ctatus_code = response.status_code
-    assert ctatus_code == 200, f"API /api/v1/public/status is not returning a 200 status code. Actual status code: {status_code}"
+    status_code = response.status_code
+    assert status_code == 200, f"API /api/v1/public/status is not returning a 200 status code. Actual status code: {status_code}"
 
     # verify the body
     response_body = response.json()
