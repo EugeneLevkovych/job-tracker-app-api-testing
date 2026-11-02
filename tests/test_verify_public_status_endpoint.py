@@ -14,7 +14,6 @@ def test_verify_public_status_endpoint():
 
     # make the call
     url = f'{BASE_URL}/api/v1/public/status'
-    print(url)
     response = requests.get(url)
     # verify the status code
     status_code = response.status_code
