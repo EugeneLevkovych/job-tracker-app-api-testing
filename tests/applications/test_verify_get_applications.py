@@ -1,6 +1,7 @@
 from configs.settings import BASE_URL
 import requests
 from helpers.auth_helper import login_user
+from clients.api_client import APIClient
 
 def test_verify_authenticated_user_can_get_applications():
 
@@ -12,13 +13,13 @@ def test_verify_authenticated_user_can_get_applications():
 
     headers = {"Authorization": f"Bearer {access_token}"}
 
-    response = requests.get(get_applications_url, headers=headers)
+    api_client = APIClient()
+
+    response_body = api_client.get_json(get_applications_url, headers=headers)
    
 
-    # verify the api status code
-    assert response.status_code == 200, f"Get applications api response expected to be 200 actual was  {response.status_code}. Endpoint: '/api/v1/applications'."
+ 
 
     # verify the api response body
-    response_body = response.json()
     assert response_body, "Expected some data in response body but it was empty or None."
     assert isinstance(response_body, list), f"Expected the response body to be a list but got {type(response_body)}."
