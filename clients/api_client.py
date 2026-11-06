@@ -11,42 +11,40 @@ class APIClient:
             self.headers["Authorization"] = f"Bearer {access_token}"
 
     def login(self, email, password):
-        url = f"{BASE_URL}/api/v1/auth/login"
+        endpoint = "/api/v1/auth/login"
 
         payload = {
             "email": email,
             "password": password
         }
 
-        response_body = self.post_json(url, data=payload)
+        response_body = self.post_json(endpoint, data=payload)
 
         return response_body["access_token"]
 
-    def get(self, url, headers=None):
+    def get(self, endpoint, headers=None, expected_status_code=200):
         headers = self.build_headers(headers)
+        url = self.build_url(endpoint)
         response = requests.get(url, headers=headers)
 
-        assert response.status_code == 200, f"Status code expected 200, actual {response.status_code}"
+        self.verify_status_code(response, expected_status_code, url)
 
         return response
 
-    def get_json(self, url, headers=None):
-        headers = self.build_headers(headers)
-        response = self.get(url, headers)
+    def get_json(self, endpoint, headers=None, expected_status_code=200):
+        response = self.get(endpoint, headers, expected_status_code)
 
         return response.json()
 
-    def post(self, url, data, headers=None, expected_status_code=200):
+    def post(self, endpoint, data, headers=None, expected_status_code=200):
         headers = self.build_headers(headers)
+        url = self.build_url(endpoint)
         response = requests.post(url, json=data, headers=headers)
-
-        assert response.status_code == expected_status_code, f"Status code expected {expected_status_code}, actual {response.status_code}"
-
+        self.verify_status_code(response, expected_status_code, url)
         return response
 
-    def post_json(self, url, data, headers=None, expected_status_code=200):
-        headers = self.build_headers(headers)
-        response = self.post(url, data, headers, expected_status_code)
+    def post_json(self, endpoint, data, headers=None, expected_status_code=200):
+        response = self.post(endpoint, data, headers, expected_status_code)
 
         return response.json()
 
@@ -54,3 +52,9 @@ class APIClient:
         if self.authenticated:
             return {**self.headers, **(headers or {})} # Combining two dictionaries
         return headers
+
+    def verify_status_code(self, response, expected_status_code, url):
+        assert response.status_code == expected_status_code, f"Status code. Expected: {expected_status_code}, Actual: {response.status_code}, URL: {url}"
+
+    def build_url(self, endpoint):
+        return f"{BASE_URL}{endpoint}"   

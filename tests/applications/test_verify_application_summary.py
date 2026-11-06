@@ -1,4 +1,3 @@
-from configs.settings import BASE_URL
 from clients.api_client import APIClient
 from helpers.auth_helper import login_user
 
@@ -20,11 +19,11 @@ def test_verify_authenticated_user_can_get_applications_summary():
   
 
     # make the call with the token in the header
-    get_applications_url = f"{BASE_URL}/api/v1/applications/summary"
+    applications_summary_endpoint = "/api/v1/applications/summary"
 
     api_client = APIClient()
 
-    response_body = api_client.get_json(get_applications_url)
+    response_body = api_client.get_json(applications_summary_endpoint)
 
     # verify the response body
    
