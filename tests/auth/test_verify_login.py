@@ -23,7 +23,7 @@ def test_verify_user_can_login_with_valid_credentials():
     }
     """
     # make the call
-    url = f"{BASE_URL}/api/v1/auth/login"
+    endpoint = "/api/v1/auth/login"
     
     payload = {
         "email": "student@example.com",
@@ -31,7 +31,7 @@ def test_verify_user_can_login_with_valid_credentials():
         }
    
     
-    response_body = api_client.post_json(url, data=payload)
+    response_body = api_client.post_json(endpoint, data=payload)
   
     assert response_body ["access_token"], f"Access token is required, but got {response_body}"
     assert response_body ["token_type"] == "bearer", "Token type is required"
@@ -58,7 +58,7 @@ def test_verify_user_can_not_login_with_invalid_credentials():
     """
 
     # make the call
-    url = f"{BASE_URL}/api/v1/auth/login"
+    endpoint = "/api/v1/auth/login"
     
     payload = {
         "email": "student@example.com",
@@ -66,7 +66,7 @@ def test_verify_user_can_not_login_with_invalid_credentials():
         }
 
     
-    response_body = api_client.post_json(url, data=payload, expected_status_code=401)
+    response_body = api_client.post_json(endpoint, data=payload, expected_status_code=401)
   
 
     # verify the response body
