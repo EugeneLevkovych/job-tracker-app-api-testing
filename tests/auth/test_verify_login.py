@@ -33,7 +33,7 @@ def test_verify_user_can_login_with_valid_credentials():
     
     response_body = api_client.post_json(url, data=payload)
   
-    assert response_body ["access_token"], f"Access token is required, but got {response_body.json()}"
+    assert response_body ["access_token"], f"Access token is required, but got {response_body}"
     assert response_body ["token_type"] == "bearer", "Token type is required"
     assert response_body ["expires_in"], f"Expires in is required but got {response_body['expires_in']}"
     assert response_body ["user"], f"User is required, but got {response_body['user']}"
