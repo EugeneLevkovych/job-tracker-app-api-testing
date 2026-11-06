@@ -1,5 +1,8 @@
 from configs.settings import BASE_URL
-import requests
+from clients.api_client import APIClient
+
+# The client will make the call and return the json body of the response 
+api_client = APIClient()
 
 def test_verify_user_can_login_with_valid_credentials():
     """	
@@ -26,13 +29,11 @@ def test_verify_user_can_login_with_valid_credentials():
         "email": "student@example.com",
         "password": "Password123!"
         }
-    response = requests.post(url, json=payload)
-    #breakpoint()
-    # verify the response code
-    assert response.status_code == 200, f"Expected status code is 200, but got {response.status_code}"
-    # verify response body
-    response_body = response.json()
-    assert response_body ["access_token"], f"Access token is required, but got {response.json()}"
+   
+    
+    response_body = api_client.post_json(url, data=payload)
+  
+    assert response_body ["access_token"], f"Access token is required, but got {response_body.json()}"
     assert response_body ["token_type"] == "bearer", "Token type is required"
     assert response_body ["expires_in"], f"Expires in is required but got {response_body['expires_in']}"
     assert response_body ["user"], f"User is required, but got {response_body['user']}"
@@ -44,7 +45,7 @@ def test_verify_user_can_login_with_valid_credentials():
     assert response_body ["user"]["created_at"], f"User created_at is required, but got {response_body['user']['created_at']}"
     assert response_body ["user"]["updated_at"], f"User updated_at is required, but got {response_body['user']['updated_at']}"
 
-def test_verify_user_can_not_login_with_valid_credentials():
+def test_verify_user_can_not_login_with_invalid_credentials():
     """
     Example response body:
     {
@@ -63,13 +64,13 @@ def test_verify_user_can_not_login_with_valid_credentials():
         "email": "student@example.com",
         "password": "Password1234"
         }
-    response = requests.post(url, json=payload)
-    #breakpoint()
-    # verify the response code
-    assert response.status_code == 401, f"Expected status code is 401, but got {response.status_code}"
+
+    
+    response_body = api_client.post_json(url, data=payload, expected_status_code=401)
+  
 
     # verify the response body
-    response_body = response.json()
+
     assert isinstance(response_body["error"], dict), f"Expected 'error' to be a dict, but got {type(response_body['error']).__name__}: {response_body['error']}"
     error = response_body["error"]
     assert error["code"] == "INVALID_CREDENTIALS", f"Expected code 'INVALID_CREDENTIALS', but got {error['code']}"

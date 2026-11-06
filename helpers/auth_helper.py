@@ -1,5 +1,5 @@
 from configs.settings import BASE_URL, DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD
-import requests
+from clients.api_client import APIClient
 
 def login_user(email=DEFAULT_USER_EMAIL, password=DEFAULT_USER_PASSWORD):
     # get JWT token
@@ -11,10 +11,8 @@ def login_user(email=DEFAULT_USER_EMAIL, password=DEFAULT_USER_PASSWORD):
         "email": email,
         "password": password
         }
-    response = requests.post(url, json=payload)
-
-    assert response.status_code == 200, f"Expected status code is 200, but got {response.status_code}"
-   
-    response_body = response.json()
+    
+    api_client = APIClient()
+    response_body = api_client.post_json(url, data=payload)    
     
     return response_body["access_token"]

@@ -1,24 +1,17 @@
 from configs.settings import BASE_URL
-import requests
 from helpers.auth_helper import login_user
 from clients.api_client import APIClient
 
 def test_verify_authenticated_user_can_get_applications():
 
-    # get JWT token
-    access_token = login_user()
 
     # make the api call with the token in the header
     get_applications_url = f"{BASE_URL}/api/v1/applications"
 
-    headers = {"Authorization": f"Bearer {access_token}"}
 
     api_client = APIClient()
 
-    response_body = api_client.get_json(get_applications_url, headers=headers)
-   
-
- 
+    response_body = api_client.get_json(get_applications_url)
 
     # verify the api response body
     assert response_body, "Expected some data in response body but it was empty or None."
