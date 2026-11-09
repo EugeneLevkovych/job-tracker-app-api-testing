@@ -3,6 +3,11 @@ from configs.settings import BASE_URL
 
 def test_verify_public_demo_stats():
     """
+    Verify the public demo stats endpoint works without logging in.
+
+    Calls GET /api/v1/public/demo-stats and checks the total number of
+    seeded applications and that every status count is an integer.
+
     Example response body:
     {
       "total_seeded_applications": 4,
