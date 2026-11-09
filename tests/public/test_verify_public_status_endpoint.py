@@ -3,6 +3,11 @@ from configs.settings import BASE_URL
 
 def test_verify_public_status_endpoint():
     """
+    Verify the public status endpoint returns the app info.
+
+    Calls GET /api/v1/public/status without logging in and checks the app
+    name, API version, environment and server time.
+
     Example response body:
     {
     "app_name": "SuperSQA Job Tracker",

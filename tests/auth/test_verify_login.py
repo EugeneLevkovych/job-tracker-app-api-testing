@@ -5,7 +5,12 @@ from clients.api_client import APIClient
 api_client = APIClient()
 
 def test_verify_user_can_login_with_valid_credentials():
-    """	
+    """
+    Verify a user can log in with a valid email and password.
+
+    Calls POST /api/v1/auth/login and checks that the response has a
+    bearer access token and the user's details.
+
     Example response body:
     {
      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJzdHVkZW50QGV4YW1wbGUuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3OTM2MTYyODYsImV4cCI6MTc5MzY0NTA4Nn0.1TkU-RM7rnHclYPVoWA-98VvlBO9cTzwv8RX2BKYDiQ",
@@ -47,6 +52,11 @@ def test_verify_user_can_login_with_valid_credentials():
 
 def test_verify_user_can_not_login_with_invalid_credentials():
     """
+    Verify login fails with a wrong password.
+
+    Calls POST /api/v1/auth/login with an invalid password and checks for
+    a 401 status and an INVALID_CREDENTIALS error.
+
     Example response body:
     {
       "error": {

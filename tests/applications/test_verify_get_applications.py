@@ -2,6 +2,12 @@ from helpers.auth_helper import login_user
 from clients.api_client import APIClient
 
 def test_verify_authenticated_user_can_get_applications():
+    """
+    Verify a logged-in user can get their list of applications.
+
+    Calls GET /api/v1/applications and checks that the response is a
+    non-empty list.
+    """
 
 
     # make the api call with the token in the header

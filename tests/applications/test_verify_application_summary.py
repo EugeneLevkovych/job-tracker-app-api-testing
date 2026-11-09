@@ -3,6 +3,11 @@ from helpers.auth_helper import login_user
 
 def test_verify_authenticated_user_can_get_applications_summary():
     """
+    Verify a logged-in user can get the summary of their applications.
+
+    Calls GET /api/v1/applications/summary and checks that every status
+    count and the total are integers.
+
     Example response body:
     {
     "potential": 2,
