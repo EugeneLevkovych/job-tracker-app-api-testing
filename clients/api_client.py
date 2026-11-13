@@ -172,21 +172,26 @@ class APIClient:
 
         return response.json()
 
-    def delete(self, endpoint):
-        headers = self.build_headers()
+    def delete(self, endpoint, headers=None, expected_status_code=204):
+        headers = self.build_headers(headers)
         url = self.build_url(endpoint)
+
+        logger.info(f"DELETE {url}")
         response = requests.delete(url, headers=headers)
+        self.log_response(response)
+
+        self.verify_status_code(response, expected_status_code, url)
         return response
 
     def patch(self, endpoint, data, headers=None, expected_status_code=200):
-            headers = self.build_headers(headers)
-            url = self.build_url(endpoint)
+        headers = self.build_headers(headers)
+        url = self.build_url(endpoint)
     
-            response = requests.patch(url, json=data, headers=headers)
-            self.log_response(response)
+        response = requests.patch(url, json=data, headers=headers)
+        self.log_response(response)
     
-            self.verify_status_code(response, expected_status_code, url)
-            return response
+        self.verify_status_code(response, expected_status_code, url)
+        return response
 
     def patch_json(self, endpoint, data, headers=None, expected_status_code=200):
         response = self.patch(endpoint, data, headers=headers, expected_status_code=expected_status_code)
