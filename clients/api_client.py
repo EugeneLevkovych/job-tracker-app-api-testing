@@ -74,9 +74,9 @@ class APIClient:
             "password": password
         }
 
-        logger.info("Logging in as %s", email)
+        logger.info(f"Logging in as {email}")
         response_body = self.post_json(endpoint, data=payload)
-        logger.info("Login successful for %s", email)
+        logger.info(f"Login successful for {email}")
 
         return response_body["access_token"]
 
@@ -98,7 +98,7 @@ class APIClient:
         headers = self.build_headers(headers)
         url = self.build_url(endpoint)
 
-        logger.info("GET %s", url)
+        logger.info(f"GET {url}")
         response = requests.get(url, headers=headers)
         self.log_response(response)
 
@@ -144,8 +144,8 @@ class APIClient:
         headers = self.build_headers(headers)
         url = self.build_url(endpoint)
 
-        logger.info("POST %s", url)
-        logger.debug("Request body: %s", self.mask_sensitive(data))
+        logger.info(f"POST {url}")
+        logger.debug(f"Request body: {self.mask_sensitive(data)}")
         response = requests.post(url, json=data, headers=headers)
         self.log_response(response)
 
@@ -170,6 +170,31 @@ class APIClient:
         """
         response = self.post(endpoint, data, headers, expected_status_code)
 
+        return response.json()
+
+    def delete(self, endpoint, headers=None, expected_status_code=204):
+        headers = self.build_headers(headers)
+        url = self.build_url(endpoint)
+
+        logger.info(f"DELETE {url}")
+        response = requests.delete(url, headers=headers)
+        self.log_response(response)
+
+        self.verify_status_code(response, expected_status_code, url)
+        return response
+
+    def patch(self, endpoint, data, headers=None, expected_status_code=200):
+        headers = self.build_headers(headers)
+        url = self.build_url(endpoint)
+    
+        response = requests.patch(url, json=data, headers=headers)
+        self.log_response(response)
+    
+        self.verify_status_code(response, expected_status_code, url)
+        return response
+
+    def patch_json(self, endpoint, data, headers=None, expected_status_code=200):
+        response = self.patch(endpoint, data, headers=headers, expected_status_code=expected_status_code)
         return response.json()
 
     def build_headers(self, headers=None):
@@ -205,10 +230,11 @@ class APIClient:
         """
         if response.status_code != expected_status_code:
             logger.error(
-                "Unexpected status code for %s. Expected: %s, Actual: %s, Body: %s",
-                url, expected_status_code, response.status_code, self.truncate(response.text),
+                f"Unexpected status code for {url}. Expected: {expected_status_code}, "
+                f"Actual: {response.status_code}, Body: {self.truncate(response.text)}. "
+                f"Response content {response.content}"
             )
-        assert response.status_code == expected_status_code, f"Status code. Expected: {expected_status_code}, Actual: {response.status_code}, URL: {url}"
+        assert response.status_code == expected_status_code, f"Status code. Expected: {expected_status_code}, Actual: {response.status_code}, URL: {url}. Response content {response.content}"
 
     def build_url(self, endpoint):
         """
@@ -230,15 +256,14 @@ class APIClient:
             response (requests.Response): Response to log.
         """
         logger.info(
-            "Response: %s (%.0f ms)",
-            response.status_code, response.elapsed.total_seconds() * 1000,
+            f"Response: {response.status_code} ({response.elapsed.total_seconds() * 1000:.0f} ms)"
         )
         if logger.isEnabledFor(logging.DEBUG):
             try:
                 body = self.mask_sensitive(response.json())
             except ValueError:
                 body = response.text
-            logger.debug("Response body: %s", self.truncate(str(body)))
+            logger.debug(f"Response body: {self.truncate(str(body))}")
 
     @staticmethod
     def mask_sensitive(data):
