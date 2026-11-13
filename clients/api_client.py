@@ -172,6 +172,13 @@ class APIClient:
 
         return response.json()
 
+    def delete(self, endpoint, expected_status_code=204):
+        headers = self.build_headers()
+        url = self.build_url(endpoint)
+        response = requests.delete(url, headers=headers)
+        return response
+    
+
     def build_headers(self, headers=None):
         """
         Combines the client's default headers with per-request headers.
