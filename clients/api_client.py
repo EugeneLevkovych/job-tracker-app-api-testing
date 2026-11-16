@@ -173,7 +173,7 @@ class APIClient:
         return response.json()
 
     def delete(self, endpoint, headers=None, expected_status_code=204):
-        headers = self.build_headers(headers)
+        headers = self.build_headers()
         url = self.build_url(endpoint)
 
         logger.info(f"DELETE {url}")
@@ -181,6 +181,8 @@ class APIClient:
         self.log_response(response)
 
         self.verify_status_code(response, expected_status_code, url)
+
+        
         return response
 
     def patch(self, endpoint, data, headers=None, expected_status_code=200):
